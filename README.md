@@ -1,134 +1,247 @@
-# FleetFlow
+# 🚛 FleetFlow
 
-FleetFlow is a comprehensive Fleet Management System developed using FastAPI, React, and PostgreSQL. It empowers organizations to efficiently manage vehicles, drivers, shipments, trips, maintenance, fuel records, real-time GPS tracking, and operational analytics.
+### Smart Fleet & Logistics Management Platform
 
-## Tech Stack
-
-### Backend
-- **FastAPI** (High-performance API framework)
-- **PostgreSQL** (Primary database)
-- **SQLAlchemy** (ORM) & **Alembic** (Migrations)
-- **JWT Authentication** (Role-Based Access Control)
-- **WebSockets** (Real-Time GPS Tracking)
-
-### Frontend
-- **React** (UI Library)
-- **Vite** (Build tool)
-- **Tailwind CSS** (Styling)
-- **React Leaflet** (Live Maps)
-- **Axios** (API Client)
+**FleetFlow** is a full-stack fleet management system built to help organizations efficiently manage **vehicles, drivers, shipments, trips, maintenance, fuel records, real-time GPS tracking, and operational analytics** through a centralized platform.
 
 ---
 
-## Project Structure
+## ✨ Features
+
+* 🔐 **Authentication & RBAC** — Secure JWT authentication with Admin, Fleet Manager, Dispatcher, and Driver roles.
+* 🚚 **Fleet Management** — Manage vehicles, drivers, assignments, and vehicle lifecycle.
+* 📦 **Shipment & Trip Management** — Track shipments from `Created → Assigned → In Transit → Delivered`.
+* 🗺️ **Route Optimization** — Geographic routing using Nominatim and OSRM.
+* 📍 **Real-Time GPS Tracking** — Monitor vehicle locations using WebSockets and interactive maps.
+* ⏱️ **ETA & Delay Alerts** — Track estimated arrival times and identify delays.
+* 🔧 **Maintenance Management** — Schedule and maintain vehicle service records.
+* ⛽ **Fuel Management** — Record fuel usage and analyze fuel trends.
+* 📊 **Operational Analytics** — Monitor driver performance, maintenance costs, fuel trends, and fleet utilization.
+
+---
+
+## 🛠️ Tech Stack
+
+### Backend
+
+| Technology     | Purpose                        |
+| -------------- | ------------------------------ |
+| **FastAPI**    | REST API framework             |
+| **PostgreSQL** | Primary database               |
+| **SQLAlchemy** | ORM                            |
+| **Alembic**    | Database migrations            |
+| **JWT**        | Authentication & authorization |
+| **WebSockets** | Real-time GPS tracking         |
+| **Redis**      | Message broker                 |
+| **Celery**     | Background tasks               |
+
+### Frontend
+
+| Technology        | Purpose           |
+| ----------------- | ----------------- |
+| **React**         | User interface    |
+| **Vite**          | Build tool        |
+| **Tailwind CSS**  | Styling           |
+| **React Leaflet** | Interactive maps  |
+| **Axios**         | API communication |
+
+### External Services
+
+* **Nominatim** — Location and geocoding
+* **OSRM** — Geographic routing
+* **OpenStreetMap** — Map data
+
+---
+
+## 📁 Project Structure
 
 ```text
 fleetflow/
-├── backend/                # FastAPI backend
+│
+├── backend/
 │   ├── alembic/            # Database migrations
-│   ├── app/                # Main application code
-│   │   ├── api/            # API endpoints (routers)
-│   │   ├── core/           # Core configuration & security
-│   │   ├── models/         # SQLAlchemy database models
-│   │   ├── schemas/        # Pydantic validation schemas
-│   │   ├── services/       # Business logic & database operations
-│   │   └── tasks/          # Celery background tasks
-│   ├── gps_simulator.py    # Script for simulating GPS data
-│   └── requirements.txt    # Python dependencies
-├── frontend/               # React + Vite frontend
+│   ├── app/
+│   │   ├── api/            # API endpoints
+│   │   ├── core/           # Configuration & security
+│   │   ├── models/         # Database models
+│   │   ├── schemas/        # Pydantic schemas
+│   │   ├── services/       # Business logic
+│   │   └── tasks/          # Celery tasks
+│   │
+│   ├── gps_simulator.py    # GPS simulation
+│   └── requirements.txt    # Backend dependencies
+│
+├── frontend/
 │   ├── public/             # Static assets
-│   ├── src/                # React source code
-│   │   ├── api/            # Axios configuration
-│   │   ├── components/     # Reusable UI components
-│   │   ├── context/        # React context providers
-│   │   ├── pages/          # Page views
-│   │   └── services/       # API service functions
-│   ├── package.json        # Node dependencies
-│   └── vite.config.js      # Vite configuration
-└── README.md               # Project documentation
+│   ├── src/
+│   │   ├── api/            # API configuration
+│   │   ├── components/     # Reusable components
+│   │   ├── context/        # React contexts
+│   │   ├── pages/          # Application pages
+│   │   └── services/       # API services
+│   │
+│   ├── package.json
+│   └── vite.config.js
+│
+└── README.md
 ```
 
 ---
 
-## How to Run the Project
+## 🚀 Getting Started
 
-### 1. Backend Setup
+### Prerequisites
+
+Make sure the following are installed:
+
+* Python 3.x
+* Node.js & npm
+* PostgreSQL
+* Redis
+* Git
+
+### 1. Backend
 
 ```bash
 cd backend
 
-# Create and activate virtual environment
 python -m venv venv
-# On Windows:
+```
+
+**Windows:**
+
+```bash
 venv\Scripts\activate
-# On Mac/Linux:
+```
+
+**macOS/Linux:**
+
+```bash
 source venv/bin/activate
+```
 
-# Install dependencies
+Install dependencies:
+
+```bash
 pip install -r requirements.txt
+```
 
-# Run database migrations
+Run database migrations:
+
+```bash
 alembic upgrade head
+```
 
-# Start the API server
+Start the API:
+
+```bash
 uvicorn app.main:app --reload
 ```
 
-### 1.1 Running Redis and Celery (Required for WebSockets and Background Tasks)
+---
 
-Ensure you have a Redis server running locally (e.g., `redis-server` on port 6379).
+### 2. Redis & Celery
 
-Start the Celery worker (in a new terminal):
+Start Redis on the default port:
+
+```text
+6379
+```
+
+In a new terminal, start the Celery worker:
+
 ```bash
 cd backend
 venv\Scripts\activate
 celery -A app.celery_app worker -l info --pool=solo
 ```
 
-Start the Celery beat scheduler (in a new terminal):
+Start Celery Beat in another terminal:
+
 ```bash
 cd backend
 venv\Scripts\activate
 celery -A app.celery_app beat -l info
 ```
 
-### 2. Frontend Setup
+---
+
+### 3. Frontend
 
 ```bash
 cd frontend
-
-# Install dependencies
 npm install
-
-# Start the development server
 npm run dev
 ```
 
-### 3. Simulating Realistic Live GPS Tracking
+---
 
-To see the **Live Vehicle Tracking** map update with speed, distance, and geofence alerts, you must simulate a vehicle sending live coordinates to the WebSocket server. Our advanced GPS Simulator automatically pulls active trips and dynamically drives vehicles along their true geographic routes fetched from OSRM!
+## 📍 Live GPS Tracking
 
-1. Ensure the backend is running (`uvicorn app.main:app --reload`).
-2. Open a new terminal window.
-3. Run the realistic simulator script:
+FleetFlow includes a GPS simulator for testing real-time vehicle tracking.
+
+Make sure the backend is running, then execute:
+
 ```bash
 cd backend
-# Make sure your virtual environment is activated
 python gps_simulator.py
 ```
-The frontend map will instantly draw massive cross-country highway routes and begin driving the simulated vehicles precisely along their true routes, continuously updating the live ETA and triggering delay alerts if applicable!
+
+The simulator generates vehicle movement along geographic routes obtained through **OSRM**.
+
+The dashboard can display:
+
+* 📍 Live vehicle locations
+* 🛣️ Active routes
+* 🚗 Vehicle speed
+* 📏 Distance travelled
+* ⏱️ Live ETA
+* 🚨 Delay alerts
+* 📌 Geofence events
 
 ---
 
-## Features
+## 🗺️ Route & Map Integration
 
-- **Authentication & RBAC:** Secure JWT login for Admin, Fleet Manager, Dispatcher, and Driver roles.
-- **Fleet Management:** Complete vehicle lifecycle and driver assignment.
-- **Shipment & Trip Logistics:** Status tracking (Created -> Assigned -> In Transit -> Delivered).
-- **Advanced Route Optimization:** True Geographic Routing via Nominatim & OSRM, generating hyper-accurate polyline routes.
-- **Live Tracking & ETA Alerts:** Real-time WebSockets dynamically track vehicles moving across states, projecting real-time delays and live ETAs directly onto the fleet dashboard map.
-- **Maintenance & Fuel:** Log fuel refills and schedule maintenance.
-- **Analytics Dashboards:** Real-time data on driver performance, fuel trends, maintenance costs, and fleet utilization.
+FleetFlow combines:
 
-## License
-This project is licensed under the [MIT License](LICENSE).
+**Nominatim → OSRM → React Leaflet**
+
+```text
+Location
+   ↓
+Nominatim
+   ↓
+Coordinates
+   ↓
+OSRM
+   ↓
+Optimized Route
+   ↓
+React Leaflet
+   ↓
+Interactive Fleet Map
+```
+
+---
+
+## 👥 User Roles
+
+| Role              | Responsibilities                               |
+| ----------------- | ---------------------------------------------- |
+| **Admin**         | System and user management                     |
+| **Fleet Manager** | Fleet, vehicles, maintenance & operations      |
+| **Dispatcher**    | Shipments, trips, routes & driver coordination |
+| **Driver**        | Assigned trips and vehicle activities          |
+
+---
+
+## 🎯 Purpose
+
+FleetFlow provides a centralized solution for modern fleet and logistics operations by combining **fleet management, real-time tracking, route optimization, maintenance, fuel monitoring, and operational analytics** into a single platform.
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**. See [`LICENSE`](LICENSE) for details.
